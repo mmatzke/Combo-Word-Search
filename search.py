@@ -20,7 +20,7 @@ def get_pos_of_word(rect, cur_page):
 doc = fitz.open("Sample.pdf")
 
 # define your search-words here:
-searchWords = ["house", "tree"]
+searchWords = ["Love", "Obstacles"]
 
 
 print("Searching...")
