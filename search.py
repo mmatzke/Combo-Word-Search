@@ -15,10 +15,10 @@ def get_pos_of_word(rect, cur_page):
             page_y + y + abs(rect.y0 - rect.y1) / 2]
 
 
-# define you pdf here:
+# define your pdf here:
 doc = fitz.open("Sample.pdf")
 
-# define you search-words here:
+# define your search-words here:
 searchWords = ["house", "tree"]
 
 
@@ -44,21 +44,21 @@ if not found_something:
     exit()
 
 # Calculate
-# loop thought a single word
+# loops thought a single word
 for word in range(len(founds_by_word)):
     for cur_entry in range(len(founds_by_word[word])):
         pos = get_pos_of_word(founds_by_word[word][cur_entry][0],
                               founds_by_word[word][cur_entry][2])
-        # compare it to all other search words
+        # compares it to all other search words
         for compare_word in range(len(founds_by_word)):
             if compare_word != word:
                 cur_best_value = math.inf
                 for cur_compare_entry in range(len(founds_by_word[compare_word])):
                     compare_pos = get_pos_of_word(founds_by_word[compare_word][cur_compare_entry][0],
                                                   founds_by_word[compare_word][cur_compare_entry][2])
-                    # calculate distance to word
+                    # calculates distance to given word
                     dist = distance(pos, compare_pos)
-                    # check if better the current best distance on this search word
+                    # checks if the current word has a shorter distance
                     if dist < cur_best_value:
                         cur_best_value = dist
                 if cur_best_value != math.inf:
@@ -67,7 +67,7 @@ for word in range(len(founds_by_word)):
 best_entry = None
 best_value = math.inf
 
-# get best word
+# gets best word
 for word in range(len(founds_by_word)):
     for cur_entry in range(len(founds_by_word[word])):
         if founds_by_word[word][cur_entry][1] < best_value:
