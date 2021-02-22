@@ -27,6 +27,7 @@ print("Searching...")
 founds = [[] for i in range(len(searchWords))]
 founds_by_word = [[] for i in range(len(searchWords))]
 
+found_something = False
 # Find all search-words
 for cur in range(len(searchWords)):
     for page in range(len(doc)):
@@ -36,6 +37,11 @@ for cur in range(len(searchWords)):
     for page in range(len(doc)):
         for word in range(len(founds[cur][page])):
             founds_by_word[cur].append([founds[cur][page][word], 0, page, searchWords[cur]])
+            found_something = True
+
+if not found_something:
+    print("No search words found")
+    exit()
 
 # Calculate
 # loop thought a single word
@@ -55,7 +61,8 @@ for word in range(len(founds_by_word)):
                     # check if better the current best distance on this search word
                     if dist < cur_best_value:
                         cur_best_value = dist
-                founds_by_word[word][cur_entry][1] += cur_best_value
+                if cur_best_value != math.inf:
+                    founds_by_word[word][cur_entry][1] += cur_best_value
 
 best_entry = None
 best_value = math.inf
