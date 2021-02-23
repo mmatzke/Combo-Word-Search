@@ -20,7 +20,7 @@ def get_pos_of_word(rect, cur_page):
 doc = fitz.open("Sample.pdf")
 
 # define your search-words here:
-searchWords = ["Love", "time", "SONG"]
+searchWords = ["just", "Memories", "HOME"]
 
 print("Searching...")
 
@@ -119,8 +119,8 @@ while cur_annotate_page <= highest_page:
                                                                   doc[cur_annotate_page].bound().y1))
     cur_annotate_page += 1
 
-print("First found on page: ", lowest_page)
-print("Last found on page: ", highest_page)
+print("First found on page: ", lowest_page+1)
+print("Last found on page: ", highest_page+1)
 print("...Search ended")
 doc.save("output.pdf", garbage=4, deflate=True, clean=True)
 doc.close()
