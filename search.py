@@ -8,7 +8,7 @@ def distance(p1, p2):
 
 
 def get_pos_of_word(rect, cur_page):
-    page_y = cur_page * doc[page].bound().y1
+    page_y = cur_page * doc[cur_page].bound().y1
     x = rect.x0
     y = rect.y0
     # calculates a position of the middle of the word-box
@@ -20,8 +20,7 @@ def get_pos_of_word(rect, cur_page):
 doc = fitz.open("Sample.pdf")
 
 # define your search-words here:
-searchWords = ["Love", "Obstacles"]
-
+searchWords = ["Love", "time", "SONG"]
 
 print("Searching...")
 
@@ -65,17 +64,63 @@ for word in range(len(founds_by_word)):
                 if cur_best_value != math.inf:
                     founds_by_word[word][cur_entry][1] += cur_best_value
 
-best_entry = None
-best_value = math.inf
-
 # gets best word
+lowest_page = len(doc)
+lowest_y = doc[0].bound().y1
+highest_page = 0
+highest_y = 0
+all_entries = []
+
 for word in range(len(founds_by_word)):
+    best_entry = None
+    best_value = math.inf
     for cur_entry in range(len(founds_by_word[word])):
         if founds_by_word[word][cur_entry][1] < best_value:
             best_entry = founds_by_word[word][cur_entry]
             best_value = founds_by_word[word][cur_entry][1]
+    if lowest_page > best_entry[2]:
+        lowest_page = best_entry[2]
+        lowest_y = best_entry[0].y0
+    elif lowest_page == best_entry[2]:
+        if lowest_y > best_entry[0].y0:
+            lowest_y = best_entry[0].y0
+    if highest_page < best_entry[2]:
+        highest_page = best_entry[2]
+        highest_y = best_entry[0].y1
+    elif highest_page == best_entry[2]:
+        if highest_y < best_entry[0].y1:
+            highest_y = best_entry[0].y1
+    highlight = doc[best_entry[2]].addHighlightAnnot(best_entry[0])
+    all_entries.append(best_entry)
 
-print("Found on page: ", best_entry[2])
-highlight = doc[best_entry[2]].addHighlightAnnot(best_entry[0])
+# adds a rect around the are of words
+cur_annotate_page = lowest_page
+while cur_annotate_page <= highest_page:
+    if cur_annotate_page == lowest_page:
+        if highest_page != lowest_page:
+            highlight = doc[cur_annotate_page].addRectAnnot(fitz.Rect(0,
+                                                                      lowest_y,
+                                                                      doc[cur_annotate_page].bound().x1,
+                                                                      doc[cur_annotate_page].bound().y1))
+        else:
+            highlight = doc[cur_annotate_page].addRectAnnot(fitz.Rect(0,
+                                                                      lowest_y,
+                                                                      doc[cur_annotate_page].bound().x1,
+                                                                      highest_y))
+    elif cur_annotate_page == highest_page:
+        highlight = doc[cur_annotate_page].addRectAnnot(fitz.Rect(0,
+                                                                  0,
+                                                                  doc[cur_annotate_page].bound().x1,
+                                                                  highest_y))
+    else:
+        highlight = doc[cur_annotate_page].addRectAnnot(fitz.Rect(0,
+                                                                  0,
+                                                                  doc[cur_annotate_page].bound().x1,
+                                                                  doc[cur_annotate_page].bound().y1))
+    cur_annotate_page += 1
+
+print("First found on page: ", lowest_page)
+print("Last found on page: ", highest_page)
+print("...Search ended")
 doc.save("output.pdf", garbage=4, deflate=True, clean=True)
 doc.close()
