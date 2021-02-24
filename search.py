@@ -123,5 +123,8 @@ while cur_annotate_page <= highest_page:
 print("First found on page: ", lowest_page+1)
 print("Last found on page: ", highest_page+1)
 print("...Search ended")
+
 doc.save("output.pdf", garbage=4, deflate=True, clean=True)
 doc.close()
+
+print("output.pdf was created or updated")
