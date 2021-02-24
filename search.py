@@ -78,20 +78,21 @@ for word in range(len(founds_by_word)):
         if founds_by_word[word][cur_entry][1] < best_value:
             best_entry = founds_by_word[word][cur_entry]
             best_value = founds_by_word[word][cur_entry][1]
-    if lowest_page > best_entry[2]:
-        lowest_page = best_entry[2]
-        lowest_y = best_entry[0].y0
-    elif lowest_page == best_entry[2]:
-        if lowest_y > best_entry[0].y0:
+    if best_entry is not None:
+        if lowest_page > best_entry[2]:
+            lowest_page = best_entry[2]
             lowest_y = best_entry[0].y0
-    if highest_page < best_entry[2]:
-        highest_page = best_entry[2]
-        highest_y = best_entry[0].y1
-    elif highest_page == best_entry[2]:
-        if highest_y < best_entry[0].y1:
+        elif lowest_page == best_entry[2]:
+            if lowest_y > best_entry[0].y0:
+                lowest_y = best_entry[0].y0
+        if highest_page < best_entry[2]:
+            highest_page = best_entry[2]
             highest_y = best_entry[0].y1
-    highlight = doc[best_entry[2]].addHighlightAnnot(best_entry[0])
-    all_entries.append(best_entry)
+        elif highest_page == best_entry[2]:
+            if highest_y < best_entry[0].y1:
+                highest_y = best_entry[0].y1
+        highlight = doc[best_entry[2]].addHighlightAnnot(best_entry[0])
+        all_entries.append(best_entry)
 
 # adds a rect around the are of words
 cur_annotate_page = lowest_page
